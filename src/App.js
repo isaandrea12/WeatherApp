@@ -4,6 +4,7 @@ const api = {
   base: "https://api.openweathermap.org/data/2.5/"
 }
 
+//weather app
 function App() {
   const [query, setQuery] = useState('');
   const [weather, setWeather] = useState({});
@@ -18,6 +19,16 @@ function App() {
           console.log(result);
         });
     }
+  }
+
+  const onClickSearch = () => {
+      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+        .then(res => res.json())
+        .then(result => {
+          setWeather(result);
+          setQuery('');
+          console.log(result);
+        });
   }
 
   const dateBuilder = (d) => {
@@ -35,6 +46,7 @@ function App() {
   return (
     <div className={(typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? 'app warm' : 'app') : 'app'}>
       <main>
+        <div className="title">Search Weather at Any Location</div>
         <div className="search-box">
           <input 
             type="text"
@@ -45,6 +57,7 @@ function App() {
             onKeyPress={search}
           />
         </div>
+        <div className="button" onClick={() => onClickSearch()}>Enter</div>
         {(typeof weather.main != "undefined") ? (
         <div>
           <div className="location-box">
@@ -53,7 +66,7 @@ function App() {
           </div>
           <div className="weather-box">
             <div className="temp">
-              {Math.round(weather.main.temp)}°Cco 
+              {Math.round(weather.main.temp)}°C 
             </div>
             <div className="weather">{weather.weather[0].main}</div>
           </div>
